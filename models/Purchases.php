@@ -129,31 +129,25 @@ group by date_format(dt, '%Y-%m-%d'), currency;";
 
 
         $sql = "select date_format(dt, '%Y-%m-%d') dt,
-       (select (sum(pur_usd.amount_buyer) /  (select sum(pur.amount_buyer)
-                                     from purchases pur
-                                     where date_format(pur.dt, '%Y-%m-%d') =  date_format(purchases.dt, '%Y-%m-%d')) * 100)
-         from purchases as pur_usd
-         where pur_usd.currency = 'USD' and date_format(pur_usd.dt, '%Y-%m-%d') = date_format(purchases.dt, '%Y-%m-%d')) USD,
+       (select sum(pur.amount_buyer)  from purchases pur
+        where date_format(pur.dt, '%Y-%m-%d') =  date_format(purchases.dt, '%Y-%m-%d') ) sum_all,
 
-
-       (select (sum(pur_rub.amount_buyer) /  (select sum(pur.amount_buyer)
-                                      from purchases pur
-                                      where date_format(pur.dt, '%Y-%m-%d') =  date_format(purchases.dt, '%Y-%m-%d')) * 100)
+       (select (sum(pur_usd.amount_buyer) /  sum_all) * 100
+        from purchases as pur_usd
+        where pur_usd.currency = 'USD' and date_format(pur_usd.dt, '%Y-%m-%d') = date_format(purchases.dt, '%Y-%m-%d')) USD,
+       (select (sum(pur_rub.amount_buyer) /  sum_all) * 100
         from purchases as pur_rub
         where pur_rub.currency = 'RUB' and date_format(pur_rub.dt, '%Y-%m-%d') = date_format(purchases.dt, '%Y-%m-%d')) RUB,
 
-       (select (sum(pur_idr.amount_buyer) /  (select sum(pur.amount_buyer)
-                                      from purchases pur
-                                      where date_format(pur.dt, '%Y-%m-%d') =  date_format(purchases.dt, '%Y-%m-%d')) * 100)
+       (select (sum(pur_idr.amount_buyer) /  sum_all) * 100
         from purchases as pur_idr
         where pur_idr.currency = 'IDR' and date_format(pur_idr.dt, '%Y-%m-%d') = date_format(purchases.dt, '%Y-%m-%d')) IDR,
 
-       (select (sum(pur_zar.amount_buyer) /  (select sum(pur.amount_buyer)
-                                      from purchases pur
-                                      where date_format(pur.dt, '%Y-%m-%d') =  date_format(purchases.dt, '%Y-%m-%d')) * 100)
+       (select (sum(pur_zar.amount_buyer) /  sum_all) * 100
         from purchases as pur_zar
         where pur_zar.currency = 'ZAR' and date_format(pur_zar.dt, '%Y-%m-%d') = date_format(purchases.dt, '%Y-%m-%d')) ZAR
 from purchases
+where 
 group by date_format(dt, '%Y-%m-%d');";
         $all = \yii::$app->db->createCommand($sql)->queryAll();
         return $all;
