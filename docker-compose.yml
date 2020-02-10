@@ -1,9 +1,39 @@
-version: '2'
+version: '3.2'
 services:
   php:
-    image: yiisoftware/yii2-php:7.1-apache
+    image: yiisoftware/yii2-php:7.3-apache
     volumes:
       - ~/.composer-docker/cache:/root/.composer/cache:delegated
       - ./:/app:delegated
     ports:
-      - '8000:80'
+      - '80:80'
+    networks:
+      - my-network
+  db:
+    image: mysql:5.6
+    restart: always
+    environment:
+      - MYSQL_DATABASE=wazzapps
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=1
+      - MYSQL_ROOT_PASSWORD=1
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/mysql
+    #volumes:
+    #  - ~/mysql:/var/lib/mysql/bin
+    networks:
+      - my-network
+  memcached:
+    container_name: memcached
+    image: memcached:latest
+    ports:
+      - "0.0.0.0:11211:11211"
+volumes:
+  my-db:
+networks:
+  my-network:
+    driver: bridge
