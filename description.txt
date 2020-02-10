@@ -2,7 +2,7 @@
 настройка фиксера https://github.com/NikkiWest/wazzapps/blob/master/models/FixerApi.php
 2. Для запуска крона необходимо запустить https://github.com/NikkiWest/wazzapps/blob/master/commands/GetDataController.php.
 пример крона (запускается каждый день в 13:00):
-0 13 * * *  /OSPanel/domains/test_task/yii get-data/purchases
+0 13 * * * php /OSPanel/domains/test_task/yii get-data/purchases
 3. Требования к языкам: php 7.2, mysql - 5.6
 4. скачать по ссылке: http://v906994m.beget.tech/base/wazzapps.sql  . Результаты на сайте: https://isobilateral-heaps.000webhostapp.com/
 5. скачать по ссылке: http://v906994m.beget.tech/base/query.sql . Результаты на сайте: https://isobilateral-heaps.000webhostapp.com/
